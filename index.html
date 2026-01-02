@@ -1,131 +1,468 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>تدريب الكتابة بالعربية</title>
+
+    <!-- خط عربي مناسب -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: "Tahoma", Arial;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 20px;
+        :root{
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --primary: #0066cc;
+            --primary-dark: #004b99;
+            --accent: #6c63ff;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --muted: #6b7280;
+            --glass: rgba(255,255,255,0.6);
         }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+        *{box-sizing:border-box}
+        html,body{
+            height:100%;
+            margin:0;
+            background:
+              radial-gradient(1200px 400px at 10% 10%, rgba(108,99,255,0.06), transparent 10%),
+              radial-gradient(1000px 300px at 90% 90%, rgba(0,102,204,0.03), transparent 10%),
+              var(--bg);
+            font-family:"Cairo", Tahoma, Arial, sans-serif;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            color:#111827;
+            direction: rtl;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
+        .wrap{
+            max-width:980px;
+            margin:28px auto;
+            padding:24px;
         }
 
-        .text-box {
-            background: #eee;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 20px;
-            margin-bottom: 15px;
+        header.app-header{
+            display:flex;
+            align-items:center;
+            gap:16px;
+            padding:20px;
+            border-radius:12px;
+            color:white;
+            background: linear-gradient(90deg,var(--primary), var(--accent));
+            box-shadow: 0 6px 20px rgba(12,30,63,0.12);
+        }
+        header .logo{
+            width:56px;
+            height:56px;
+            border-radius:10px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background: rgba(255,255,255,0.12);
+            font-size:26px;
+            box-shadow: inset 0 -6px 18px rgba(255,255,255,0.02);
+        }
+        header h1{
+            margin:0;
+            font-size:20px;
+            font-weight:700;
+        }
+        header p{margin:0;font-size:13px;opacity:0.92}
+
+        .card{
+            margin-top:18px;
+            background:var(--card);
+            border-radius:14px;
+            padding:18px;
+            box-shadow: 0 8px 30px rgba(15,23,42,0.06);
         }
 
-        textarea {
-            width: 100%;
-            height: 120px;
-            font-size: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            resize: none;
+        .target-box{
+            background: linear-gradient(180deg,#fbfbfd,#ffffff);
+            border-radius:10px;
+            padding:18px;
+            font-size:22px;
+            line-height:2;
+            color:#0f172a;
+            border:1px solid rgba(15,23,42,0.04);
+            min-height:96px;
+            direction:rtl;
+            text-align:right;
+            overflow-wrap:break-word;
         }
 
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 18px;
+        .target-box .char{
+            display:inline-block;
+            padding:2px 3px;
+            border-radius:4px;
+            transition: background .12s, color .12s, transform .08s;
+            user-select:none;
+            -webkit-user-select:none;
+        }
+        .char.correct{ background: rgba(22,163,74,0.08); color: var(--success); }
+        .char.incorrect{ background: rgba(220,38,38,0.07); color: var(--danger); }
+        .char.current{ outline: 2px dashed rgba(16,24,40,0.06); transform: translateY(-2px); box-shadow: 0 4px 18px rgba(2,6,23,0.06); }
+
+        .controls{
+            display:flex;
+            gap:12px;
+            margin-top:14px;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .controls .field{
+            flex:1 1 220px;
         }
 
-        button {
-            margin-top: 15px;
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        textarea#input{
+            width:100%;
+            min-height:120px;
+            resize:vertical;
+            border-radius:10px;
+            padding:14px;
+            font-size:20px;
+            border:1px solid rgba(15,23,42,0.06);
+            line-height:1.6;
+            direction:rtl;
+            text-align:right;
+            outline:none;
+            transition: box-shadow .12s, border-color .12s;
+        }
+        textarea#input:focus{
+            box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+            border-color: var(--primary);
         }
 
-        button:hover {
-            background: #0056b3;
+        .stats{
+            display:flex;
+            gap:12px;
+            margin-top:14px;
+            align-items:center;
+            justify-content:space-between;
+            flex-wrap:wrap;
+        }
+        .stat{
+            background: linear-gradient(180deg,#ffffff,#fbfdff);
+            border-radius:8px;
+            padding:10px 14px;
+            min-width:120px;
+            text-align:center;
+            border:1px solid rgba(15,23,42,0.03);
+        }
+        .stat b{ display:block; font-size:18px; }
+        .stat span{ color:var(--muted); font-size:13px; }
+
+        .progress{
+            height:10px;
+            background:rgba(2,6,23,0.05);
+            border-radius:999px;
+            overflow:hidden;
+            margin-top:12px;
+        }
+        .progress > i{
+            display:block;
+            height:100%;
+            width:0%;
+            background: linear-gradient(90deg,var(--primary), var(--accent));
+            transition: width .2s ease;
+        }
+
+        .buttons{
+            display:flex;
+            gap:10px;
+            margin-top:12px;
+            flex-wrap:wrap;
+        }
+        .btn{
+            border:0;
+            padding:10px 14px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            color:white;
+            background:var(--primary);
+            transition: transform .08s, background .12s;
+        }
+        .btn.secondary{ background:#f3f4f6; color:#111827; border:1px solid rgba(15,23,42,0.04); }
+        .btn.warn{ background:var(--danger); }
+        .btn:active{ transform: translateY(1px) }
+
+        @media (max-width:640px){
+            header{padding:14px}
+            .target-box{font-size:18px}
+            .stat{min-width:unset;flex:1 1 45%}
         }
     </style>
 </head>
 <body>
+<div class="wrap">
+    <header class="app-header">
+        <div class="logo">⌨️</div>
+        <div>
+            <h1>تدريب الكتابة بالعربية</h1>
+            <p>تمرّن على كتابة نص عربي بدقة وسرعة مع عدّ الأخطاء وشريط تقدم بصري.</p>
+        </div>
+    </header>
 
-<div class="container">
-    <h1>⌨️ تدريب الكتابة بالعربية</h1>
+    <div class="card" style="margin-top:18px;">
+        <div id="text" class="target-box" aria-hidden="true">
+            اللغة العربية من أجمل لغات العالم وتعلم الكتابة السريعة يساعد على زيادة الإنتاجية
+        </div>
 
-    <div class="text-box" id="text">
-        اللغة العربية من أجمل لغات العالم وتعلم الكتابة السريعة يساعد على زيادة الإنتاجية
+        <div class="progress" aria-hidden="true" title="نسبة الإنجاز">
+            <i id="progressBar" style="width:0%"></i>
+        </div>
+
+        <div style="margin-top:14px;">
+            <textarea id="input" placeholder="ابدأ الكتابة هنا..." dir="rtl" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <b id="wpm">0</b>
+                <span>كلمة/دقيقة</span>
+            </div>
+            <div class="stat">
+                <b id="accuracy">100%</b>
+                <span>الدقة</span>
+            </div>
+            <div class="stat">
+                <b id="errors">0</b>
+                <span>أخطاء</span>
+            </div>
+            <div class="stat">
+                <b id="time">00:00</b>
+                <span>الزمن</span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="startBtn" class="btn">ابدأ</button>
+            <button id="pauseBtn" class="btn secondary">إيقاف مؤقت</button>
+            <button id="resetBtn" class="btn secondary">إعادة</button>
+            <button id="shuffleBtn" class="btn secondary" title="احصل على نص آخر">تغيير النص</button>
+        </div>
     </div>
-
-    <textarea id="input" placeholder="ابدأ الكتابة هنا..."></textarea>
-
-    <div class="stats">
-        <div>⏱️ السرعة: <span id="speed">0</span> كلمة/دقيقة</div>
-        <div>❌ الأخطاء: <span id="errors">0</span></div>
-    </div>
-
-    <button onclick="resetTest()">إعادة المحاولة</button>
 </div>
 
 <script>
-    const text = document.getElementById("text").innerText;
-    const input = document.getElementById("input");
-    const speedEl = document.getElementById("speed");
-    const errorsEl = document.getElementById("errors");
+    // إعداد العناصر
+    const originalTextEl = document.getElementById('text');
+    const inputEl = document.getElementById('input');
+    const wpmEl = document.getElementById('wpm');
+    const accuracyEl = document.getElementById('accuracy');
+    const errorsEl = document.getElementById('errors');
+    const timeEl = document.getElementById('time');
+    const progressBar = document.getElementById('progressBar');
 
-    let startTime = null;
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
 
-    input.addEventListener("input", () => {
-        if (!startTime) {
-            startTime = new Date();
+    // مجموعة نصوص موسعة لزيادة التنوع
+    const samples = [
+        "اللغة العربية من أجمل لغات العالم وتعلم الكتابة السريعة يساعد على زيادة الإنتاجية",
+        "التدرّب المستمر يجعل الكتابة أسرع وأكثر دقة والثقة بالنفس تنمو تدريجياً",
+        "التركيز على الحروف الصعبة يدخل ضمن خطة التدريب الفعّالة لتحقيق تحسن ثابت",
+        "تطبيقات التدريبات التكرارية تساعد على ترسيخ الحركات والأحرف في الذاكرة الحركية",
+        "القراءة اليومية توسع المفردات وتُحسن القدرة على التعبير بدقة ووضوح",
+        "العمل ضمن فترات قصيرة ومركزة أفضل من العمل المستمر لفترات طويلة بلا هدف",
+        "تنظيم الوقت ووضع أهداف بسيطة يسهل إكمال مهام التدريب بانتظام",
+        "الاهتمام بالتفاصيل الصغيرة مثل النون والتاء يغيّر مستوى الكتابة بشكل كبير",
+        "اختبر سرعتك ودقتك يومياً ولا تقارن نفسك بالآخرين بل مع أدائك السابق",
+        "التنوع في النصوص يزيد من جاهزيتك لمواقف الكتابة المختلفة ويقوّي المهارات",
+        "جمل قصيرة وسهلة مناسبة للتسخين، بينما الجمل الطويلة تقوّي التحمل والدقة",
+        "جرّب الكتابة دون النظر إلى لوحة المفاتيح لتطوير الذاكرة الحركية لديك",
+        "استغلال فترات الانتظار للتمرين يجعل التقدّم أسرع وأكثر استدامة",
+        "التكرار المدروس مع فترات راحة يحسن الاحتفاظ بالمعلومات على المدى الطويل",
+        "استخدم نصوصاً تحتوي على علامات الترقيم لتمرَّن على الوقوف والضغط الصحيحين",
+        "حافظ على وضعية صحيحة أثناء الكتابة لتتفادى الإرهاق وتحافظ على الإنتاجية"
+    ];
+
+    function setSampleText(txt){
+        // ضع النص داخل spans لكل حرف
+        originalTextEl.innerHTML = '';
+        for (let ch of txt) {
+            const span = document.createElement('span');
+            span.className = 'char';
+            // استخدام nbsp للحفاظ على مسافات مرئية
+            span.textContent = ch === ' ' ? '\u00A0' : ch;
+            originalTextEl.appendChild(span);
         }
+    }
 
-        const typed = input.value;
-        let errors = 0;
+    // ابدأ بالنص الأول
+    let currentSample = 0;
+    setSampleText(samples[currentSample]);
 
-        for (let i = 0; i < typed.length; i++) {
-            if (typed[i] !== text[i]) {
-                errors++;
+    // حالة الاختبار
+    let startTime = null;
+    let elapsed = 0; // ms
+    let timerInterval = null;
+    let isPaused = false;
+
+    function formatTime(ms){
+        const totalSec = Math.floor(ms/1000);
+        const m = Math.floor(totalSec/60).toString().padStart(2,'0');
+        const s = (totalSec%60).toString().padStart(2,'0');
+        return `${m}:${s}`;
+    }
+
+    function updateTimer(){
+        if (!startTime || isPaused) return;
+        elapsed = Date.now() - startTime;
+        timeEl.innerText = formatTime(elapsed);
+    }
+
+    function startTest(){
+        if (!startTime){
+            startTime = Date.now();
+        } else if (isPaused){
+            // استأنف
+            startTime = Date.now() - elapsed;
+        }
+        isPaused = false;
+        inputEl.focus();
+        if (!timerInterval) timerInterval = setInterval(()=> {
+            updateTimer();
+        }, 250);
+    }
+
+    function pauseTest(){
+        if (!startTime) return;
+        isPaused = true;
+        updateTimer();
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function resetTest(){
+        clearInterval(timerInterval);
+        timerInterval = null;
+        startTime = null;
+        elapsed = 0;
+        isPaused = false;
+        inputEl.value = '';
+        wpmEl.innerText = '0';
+        accuracyEl.innerText = '100%';
+        errorsEl.innerText = '0';
+        timeEl.innerText = '00:00';
+        progressBar.style.width = '0%';
+        // ازالة تصنيفات الحروف
+        document.querySelectorAll('.char').forEach(c => {
+            c.classList.remove('correct','incorrect','current');
+        });
+        // ضع المسمى الحالي كحرف نشط (أول حرف)
+        const first = document.querySelector('.char');
+        if (first) first.classList.add('current');
+        inputEl.focus();
+    }
+
+    function shuffleText(){
+        currentSample = (currentSample + 1) % samples.length;
+        setSampleText(samples[currentSample]);
+        resetTest();
+    }
+
+    // في البداية ضع current على أول حرف
+    resetTest();
+
+    function evaluate(){
+        const typed = inputEl.value;
+        const charEls = Array.from(document.querySelectorAll('.char'));
+        let correctCount = 0;
+        let errorsCount = 0;
+
+        // إزالة current من الكل
+        charEls.forEach(c => c.classList.remove('current'));
+
+        // طول للمقارنة
+        const minLen = Math.min(typed.length, charEls.length);
+
+        for (let i=0;i<minLen;i++){
+            const expected = charEls[i].textContent;
+            // لاحظنا أن المسافة استخدمنا nbsp؛ لذلك نقارن مع المسافة الطبيعية
+            const typedChar = typed[i];
+            if ((expected === '\u00A0' ? ' ' : expected) === typedChar) {
+                charEls[i].classList.add('correct');
+                correctCount++;
+            } else {
+                charEls[i].classList.add('incorrect');
+                errorsCount++;
             }
         }
 
-        errorsEl.innerText = errors;
-
-        const timePassed = (new Date() - startTime) / 1000 / 60;
-        const words = typed.length / 5;
-        const speed = Math.round(words / timePassed);
-
-        if (speed > 0 && speed < 500) {
-            speedEl.innerText = speed;
+        // الحروف الزائدة تُعتبر أخطاء
+        if (typed.length > charEls.length){
+            errorsCount += (typed.length - charEls.length);
+        } else {
+            // الحروف المتبقية غير مكتوبة تبقى بلا تصنيف
         }
+
+        // وضع مؤشر على الحرف الحالي التالي
+        const nextIndex = Math.min(typed.length, charEls.length - 1);
+        if (charEls[nextIndex]) charEls[nextIndex].classList.add('current');
+
+        // حساب الإحصاءات
+        errorsEl.innerText = errorsCount;
+
+        const minutes = (startTime ? Math.max((Date.now() - startTime)/1000/60, 1/60) : 0); // minute fraction floor
+        // سرعة تعتمد على الحروف الصحيحة فقط
+        const wordsTyped = correctCount / 5;
+        const wpm = startTime ? Math.round(wordsTyped / minutes) : 0;
+        wpmEl.innerText = (wpm > 0 && wpm < 1000) ? wpm : '0';
+
+        const accuracy = typed.length === 0 ? 100 : Math.max(0, Math.round((correctCount / typed.length) * 100));
+        accuracyEl.innerText = accuracy + '%';
+
+        // تقدم
+        const progress = Math.round((correctCount / charEls.length) * 100);
+        progressBar.style.width = Math.max(0, Math.min(100, progress)) + '%';
+
+        // عندما ينهي المستخدم كل الحروف بشكل صحيح نوقف المؤقت تلقائياً
+        if (correctCount >= charEls.length){
+            pauseTest();
+        }
+    }
+
+    // أحداث
+    inputEl.addEventListener('input', (e)=>{
+        if (!startTime && inputEl.value.length > 0) startTest();
+        if (isPaused) return; // لو متوقف مؤقتًا نتجاهل الإدخال
+        evaluate();
     });
 
-    function resetTest() {
-        input.value = "";
-        startTime = null;
-        speedEl.innerText = "0";
-        errorsEl.innerText = "0";
-    }
-</script>
+    startBtn.addEventListener('click', ()=> {
+        startTest();
+    });
 
+    pauseBtn.addEventListener('click', ()=> {
+        pauseTest();
+    });
+
+    resetBtn.addEventListener('click', ()=> {
+        resetTest();
+    });
+
+    shuffleBtn.addEventListener('click', ()=> {
+        shuffleText();
+    });
+
+    // تحسين: التركيز على textarea عند الضغط على anywhere داخل الtarget-box
+    originalTextEl.addEventListener('click', ()=> inputEl.focus());
+
+    // الوصول: إضافة حدث keydown للـ Escape لإعادة الاختبار
+    document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape') resetTest();
+    });
+
+    // تحميل: ضع current على الحرف الأول
+    window.addEventListener('load', ()=> {
+        const first = document.querySelector('.char');
+        if (first) first.classList.add('current');
+    });
+</script>
 </body>
 </html>
-
